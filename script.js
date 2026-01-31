@@ -65,7 +65,7 @@ async function startChecking() {
     appendToStatusOutput(`➡️ Checking card ${i + 1} of ${cards.length}: ${card}\n`);
 
     try {
-      const apiURL = `https://chkr-api.vercel.app/api/check?cc=${encodeURIComponent(card)}`;
+      const apiURL = `/api/chkr?cc=${encodeURIComponent(card)}`;
       const response = await fetch(apiURL);
 
       if (!response.ok) throw new Error(`API responded with status ${response.status}`);
@@ -76,18 +76,21 @@ async function startChecking() {
       if (data.status === 'Live' || data.status === 'APPROVED') status = 'Live';
       else if (data.status === 'Die' || data.status === 'DECLINED') status = 'Dead';
 
+      const message = data.message || 'No message';
+
       if (status === 'Live') {
         liveCount++;
         liveNumbersTextarea.value += card + "\n";
+        appendToStatusOutput(`Result: 🟢 Live - ${message}\n`);
       } else if (status === 'Dead') {
         deadCount++;
         deadNumbersTextarea.value += card + "\n";
+        appendToStatusOutput(`Result: 🔴 Dead - ${message}\n`);
       } else {
         unknownCount++;
         unknownNumbersTextarea.value += card + "\n";
+        appendToStatusOutput(`Result: ⚪ Unknown - ${message}\n`);
       }
-
-      appendToStatusOutput(`Result: ${status === 'Live' ? '🟢 Live' : status === 'Dead' ? '🔴 Dead' : '⚪ Unknown'}\n`);
       updateSummaryCounts(liveCount, deadCount, unknownCount);
 
     } catch (error) {
