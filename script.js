@@ -65,7 +65,7 @@ async function startChecking() {
     appendToStatusOutput(`➡️ Checking card ${i + 1} of ${cards.length}: ${card}\n`);
 
     try {
-      const apiURL = `https://cc-checker-faker.vercel.app/api/chkr?cc=${encodeURIComponent(card)}`;
+      const apiURL = `https://chkr-api.vercel.app/api/chkr?cc=${encodeURIComponent(card)}`;
       const response = await fetch(apiURL);
 
       if (!response.ok) throw new Error(`API responded with status ${response.status}`);
